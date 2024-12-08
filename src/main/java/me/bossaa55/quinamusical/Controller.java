@@ -262,6 +262,8 @@ public class Controller implements Initializable {
             songsVBox.getChildren().removeAll(songList);
             songList.clear();
             songsTextField.setText("");
+            nCanconsTretes=0;
+            for(Musica m : musicInfo) m.setHaSortit(false);
         }
     }
 
