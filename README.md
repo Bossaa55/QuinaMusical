@@ -31,3 +31,6 @@ Michael Jackson - Billie Jean.mp3;1:26
 ```
 > [!Note]
 > El programa avisa quan el format del fitxer no és vàlid o no s'han trobat les cançons.
+
+## Captures de pantalla
+![image](https://github.com/user-attachments/assets/d6abee65-c469-4c6a-bdea-071314d87746)
