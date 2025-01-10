@@ -5,7 +5,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,18 +24,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
-import javafx.stage.Stage;
 import javafx.util.Duration;
+import me.bossaa55.quinamusical.objects.Musica;
+import me.bossaa55.quinamusical.objects.Utils;
 
 import java.text.Normalizer;
 import java.util.*;
 import java.util.List;
-import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-public class Controller implements Initializable {
+public class ControllerPlayer {
 
     @FXML
     private HBox infoContainer;
@@ -68,9 +66,7 @@ public class Controller implements Initializable {
     @FXML
     private ScrollPane scrollPane;
 
-    private Stage stage;
-
-    private final String musicDirectory= Paths.get("").toAbsolutePath() +"/music";
+    //private final String musicDirectory= Paths.get("").toAbsolutePath() +"/music";
     //Conte el nom, temps de tornada i fitxer de cada canço
     private final ArrayList<Musica> musicInfo = new ArrayList<>();
 
@@ -85,10 +81,16 @@ public class Controller implements Initializable {
     //Guarda l'index de la canço que s'està reproduint.
     private int playing=0;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    private File quinaDir;
+
+    public void setQuina(File quina){
+        quinaDir=quina;
+        iniciar();
+    }
+
+    public void iniciar() {
         //LLegir el fitxer de música
-        File musicInfoFile = new File(musicDirectory+"/info.txt");
+        File musicInfoFile = new File(quinaDir, "info.csv");
         try{
             //El fitxer xisteix
             if(musicInfoFile.exists()){
@@ -99,7 +101,7 @@ public class Controller implements Initializable {
                     String linia = llegir.nextLine();
                     String[] info = linia.split(";");
                     if(info.length==2) {
-                        int duracio = timeToSeconds(info[1]);
+                        int duracio = Utils.timeToSeconds(info[1]);
                         if(duracio>-1) {
                             musicInfo.add(new Musica(info[0].trim(), duracio));
                             nLinies++;
@@ -119,11 +121,11 @@ public class Controller implements Initializable {
                     }
                 }
 
-                //Buscar en el directori tots els fitxers que hi ha escrits a info.txt
+                //Buscar en el directori tots els fitxers que hi ha escrits a info.csv
                 int nArxiusTrobats=0;
                 ArrayList<String> fitxersNoTrobats = new ArrayList<>();
                 for (int i = 0; i < musicInfo.size(); i++) {
-                    File f = new File(musicDirectory+"/"+musicInfo.get(i).getNom());
+                    File f = new File(quinaDir, "music/"+ musicInfo.get(i).getNom());
                     if(f.exists()){
                         nArxiusTrobats++;
                         musicInfo.get(i).setFile(f);
@@ -147,7 +149,7 @@ public class Controller implements Initializable {
                 }
 
             }else{
-                //No s'ha trobat el fitxer info.txt, informa i tanca.
+                //No s'ha trobat el fitxer info.csv, informa i tanca.
                 raiseAlert(Alert.AlertType.ERROR, "Error","No s'ha trobat el fitxer: "+musicInfoFile.getAbsolutePath());
                 Platform.exit();
             }
@@ -169,23 +171,6 @@ public class Controller implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         return alert.showAndWait();
-    }
-
-    //Retorna format 00:00 a segons. Exemple: 1:20 -> 80
-    private int timeToSeconds(String time){
-        String[] separat=time.split(":");
-        try{
-            if(separat.length==2){
-                int min=Integer.parseInt(separat[0]);
-                int sec=Integer.parseInt(separat[1]);
-                return min*60+sec;
-            }else if(separat.length==1){
-                return Integer.parseInt(separat[0]);
-            }
-            return 0;
-        }catch (NumberFormatException e){
-            return -1;
-        }
     }
 
     //Possar la canço de l'index

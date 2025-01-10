@@ -1,0 +1,72 @@
+.bt-addd-song{
+    -fx-background-color: #00000030;
+    -fx-background-radius: 3;
+    -fx-border-color: -fx-gray;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-text-fill: #fff;
+    -fx-font-size: 20px;
+}
+
+.bt-addd-song:hover{
+    -fx-border-color: -fx-primary-color;
+	-fx-effect: dropshadow(three-pass-box, #f1e32443 , 35, 0, 0, 0);
+}
+
+.bt-new-song{
+    -fx-background-color: transparent;
+    -fx-font-size: 20px;
+    -fx-text-fill: -fx-primary-color;
+    -fx-font-weight: bold ;
+}
+
+.bt-delete-song{    
+    -fx-background-color: #00000030;
+    -fx-background-radius: 3;
+    -fx-border-color: #f00;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-font-size: 18px;
+    -fx-text-fill: #f00;
+    -fx-font-weight: bold ;
+}
+
+.bt-delete-song:hover{
+    -fx-background-color: #f00;
+    -fx-border-color: #00000030;
+    -fx-text-fill: #fff;
+	-fx-effect: dropshadow(three-pass-box, #f1242443 , 35, 0, 0, 0);
+}
+
+.bt-save-time{    
+    -fx-background-color: #00000030;
+    -fx-background-radius: 3;
+    -fx-border-color: -fx-primary-color;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold ;
+    -fx-padding: 0 0 0 0;
+}
+
+.bt-save-time:hover{
+	-fx-effect: dropshadow(three-pass-box, #f1e42455 , 35, 0, 0, 0);
+
+}
+
+.bt-save-time:pressed{
+    -fx-border-color: rgb(13, 230, 13);
+}
+
+.underline{
+    -fx-border-color: -fx-gray;
+    -fx-border-width: 0 0 2 0;
+}
+
+Slider .track {
+    -fx-background-color: -fx-gray;
+}
+
+Slider .thumb{
+    -fx-background-color: -fx-primary-color;
+}

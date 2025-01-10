@@ -1,8 +1,10 @@
 * {
+    -fx-fons: #21242B;
 	-fx-primary-color: #f1e424;
+	-fx-primary-color-hover: #e8e28c;
 	-fx-secondary-color: #a79c02;
     -fx-primary-background-color: #202124;
-    -fx-secondary-background-color: #32353e;
+    -fx-secondary-background-color: #21252b;
 	-fx-focus-color: -fx-secondary-color;
     -fx-gray: #444444;
 }
@@ -37,12 +39,44 @@
     -fx-text-fill: #fff;
 }
 
+.text-scondary{
+    -fx-font-size: 14px;
+    -fx-text-fill: #c5c5c5;
+}
+
 .text-link{
     -fx-text-fill: -fx-primary-color;
 }
 
 .text-link:hover{
     -fx-text-style: underline;
+}
+
+.bt-main, .bt-sec{
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-font-size: 15;
+}
+
+.bt-main{
+    -fx-background-color: -fx-primary-color;
+    -fx-border-color: -fx-secondary-color;
+    -fx-text-fill: #000;
+    -fx-min-width: 75;
+}
+
+.bt-main:hover{
+    -fx-background-color: -fx-primary-color-hover;
+	-fx-effect: dropshadow(three-pass-box, #f1e32433 , 15, 0, 0, 0);
+}
+
+.bt-sec{
+    -fx-background-color: #3d424b;
+    -fx-border-color: #434a53;
+    -fx-text-fill: #8996a8;
+    -fx-min-width: 75;
 }
 
 .scroll-pane{
@@ -89,6 +123,7 @@
 
 .text-field:focused{
     -fx-border-color: -fx-primary-color;
+	-fx-effect: dropshadow(three-pass-box, #f1e32443 , 35, 0, 0, 0);
 }
 
 .text-field:hover{
@@ -141,4 +176,8 @@
 
 .info-container{
     -fx-background-color: #00000066;
+}
+
+.progress-indicator{
+    -fx-progress-color: -fx-primary-color;
 }

@@ -13,11 +13,11 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/me/bossaa55/quinamusical/images/icon.png"))));
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("layout.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 500);
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("QuinesManager.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
         stage.setTitle("Quina Musical");
         stage.setScene(scene);
-        stage.setMaximized(true);
+        //stage.setMaximized(true);
         stage.show();
     }
 

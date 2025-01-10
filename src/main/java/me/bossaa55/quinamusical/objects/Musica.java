@@ -1,4 +1,4 @@
-package me.bossaa55.quinamusical;
+package me.bossaa55.quinamusical.objects;
 
 import java.io.File;
 

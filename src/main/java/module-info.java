@@ -7,4 +7,6 @@ module me.bossaa55.quinamusical {
 
     opens me.bossaa55.quinamusical to javafx.fxml;
     exports me.bossaa55.quinamusical;
+    exports me.bossaa55.quinamusical.objects;
+    opens me.bossaa55.quinamusical.objects to javafx.fxml;
 }
