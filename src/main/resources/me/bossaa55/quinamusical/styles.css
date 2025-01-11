@@ -1,8 +1,21 @@
+@font-face {
+    font-family: 'Open Sans';
+    src: url('fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Open Sans Bold';
+    src: url('fonts/OpenSans-Bold.ttf');
+}
+
 * {
     -fx-fons: #21242B;
-	-fx-primary-color: #f1e424;
+    -fx-fons2: #2C2F36;
+    -fx-gris: #4A4C52;
+    -fx-yellow: #EFFF5A;
+	-fx-primary-color: #0F7B8A;
 	-fx-primary-color-hover: #e8e28c;
-	-fx-secondary-color: #a79c02;
+	-fx-secondary-color: #EFFF5A;
     -fx-primary-background-color: #202124;
     -fx-secondary-background-color: #21252b;
 	-fx-focus-color: -fx-secondary-color;
@@ -14,16 +27,18 @@
 }
 
 .container{
-    -fx-background-color: -fx-secondary-background-color;
-    -fx-background-radius: 25px;
-    -fx-background-insets: 2px;
-    -fx-border-color: -fx-primary-color;
-    -fx-border-width: 5px;
-    -fx-border-radius: 25px;
+    -fx-background-color: -fx-fons2;
+    -fx-background-radius: 6px;
+}
+
+.sub-container{
+    -fx-background-color: -fx-gris;
+    -fx-background-radius: 6px;
 }
 
 .title-main{
-    -fx-font-size: 30px;
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 36px;
     -fx-text-fill: #fff;
     -fx-font-weight: bold ;
 }
@@ -52,30 +67,20 @@
     -fx-text-style: underline;
 }
 
-.bt-main, .bt-sec{
-    -fx-background-radius: 5;
-    -fx-background-insets: 0;
-    -fx-border-radius: 5;
-    -fx-border-width: 1;
-    -fx-font-size: 15;
+.bt-main, .bt-sec, .bt-text{
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 16;
+    -fx-font-weight: bold;
+    -fx-text-fill: #fff;
 }
 
 .bt-main{
     -fx-background-color: -fx-primary-color;
-    -fx-border-color: -fx-secondary-color;
-    -fx-text-fill: #000;
     -fx-min-width: 75;
 }
 
-.bt-main:hover{
-    -fx-background-color: -fx-primary-color-hover;
-	-fx-effect: dropshadow(three-pass-box, #f1e32433 , 15, 0, 0, 0);
-}
-
 .bt-sec{
-    -fx-background-color: #3d424b;
-    -fx-border-color: #434a53;
-    -fx-text-fill: #8996a8;
+    -fx-background-color: -fx-gris;
     -fx-min-width: 75;
 }
 
