@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -26,7 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javafx.util.Duration;
-import me.bossaa55.quinamusical.objects.Musica;
+import me.bossaa55.quinamusical.objects.Song;
 import me.bossaa55.quinamusical.objects.Utils;
 
 import java.text.Normalizer;
@@ -40,7 +39,10 @@ public class ControllerPlayer {
     private HBox infoContainer;
 
     @FXML
-    private Label etiNomCanco;
+    private Label lbSongName;
+
+    @FXML
+    private Label lbSongAuthor;
 
     @FXML
     private ImageView pauseButton;
@@ -49,180 +51,184 @@ public class ControllerPlayer {
     private ImageView reiniciarButton;
 
     @FXML
-    private Button btPartidaNova;
+    private Button btNewGame;
 
     @FXML
-    private Button btTreureCanco;
+    private Button btNewSong;
 
     @FXML
-    private VBox songsVBox;
+    private VBox songListContainer;
 
     @FXML
-    private Label scrollbarItem;
+    private Label songListItem;
 
     @FXML
-    private TextField songsTextField;
+    private TextField tfSearchSong;
 
     @FXML
-    private ScrollPane scrollPane;
+    private ImageView ivSongCover;
 
-    //private final String musicDirectory= Paths.get("").toAbsolutePath() +"/music";
-    //Conte el nom, temps de tornada i fitxer de cada canço
-    private final ArrayList<Musica> musicInfo = new ArrayList<>();
+    //Saves all the songs.
+    private final ArrayList<Song> songs = new ArrayList<>();
 
-    //Guarda el nombre de cançons que s'han tret
-    private int nCanconsTretes=0;
+    //Saves the number of songs that have been played
+    private int nSongsPlayed=0;
 
     private MediaPlayer mediaPlayer;
-    private Media media;
 
-    //Saber si la música s'està reproduint.
+    //Know if the music is playing or not (for the play/pause button).
     private boolean musicIsPlaying=false;
-    //Guarda l'index de la canço que s'està reproduint.
+    //Stores the index of the song that is being played.
     private int playing=0;
 
-    private File quinaDir;
-
-    public void setQuina(File quina){
-        quinaDir=quina;
-        iniciar();
-    }
-
-    public void iniciar() {
-        //LLegir el fitxer de música
-        File musicInfoFile = new File(quinaDir, "info.csv");
+    /**
+     * Initializes the program. Reads the info.csv file and loads the files.
+     * @param quina Quina root dir to get the data from
+     */
+    public void start(File quina) {
+        //Load the info.csv file
+        File musicInfoFile = new File(quina, "info.csv");
         try{
-            //El fitxer xisteix
+            //The file exists
             if(musicInfoFile.exists()){
-                Scanner llegir = new Scanner(musicInfoFile);
-                //Llegir el contingut del fitxer
-                int nLinies=0;
-                while (llegir.hasNext()){
-                    String linia = llegir.nextLine();
-                    String[] info = linia.split(";");
-                    if(info.length==2) {
-                        int duracio = Utils.timeToSeconds(info[1]);
-                        if(duracio>-1) {
-                            musicInfo.add(new Musica(info[0].trim(), duracio));
-                            nLinies++;
+                Scanner scanner = new Scanner(musicInfoFile);
+                //Read the file content
+                int nLine=0;
+                ArrayList<String> filesNotFound = new ArrayList<>();
+                while (scanner.hasNext()){
+                    String line = scanner.nextLine();
+                    String[] info = line.split(";");
+                    if(info.length==2) { //Line format is valid
+                        int duration = Utils.timeToSeconds(info[1]);
+                        if(duration>=0) {//Duration is valid
+                            //Load the music file
+                            File f = new File(quina, "music/"+ info[0].trim());
+                            if(f.exists()){
+                                //If exists load it into the song list
+                                songs.add(new Song(f, duration));
+                            }
+                            else {
+                                filesNotFound.add(info[0].trim());
+                            }
+                            nLine++;
                         }else{
-                            //El format del fixer no és correcte
-                            raiseAlert(Alert.AlertType.ERROR, "Error",
+                            //The file format is not valid
+                            Utils.raiseAlert(Alert.AlertType.ERROR, "Error",
                                     "El format del fitxer no és correcte\n" +
-                                            "Linia "+nLinies+": "+linia);
+                                            "Linia "+nLine+": "+line);
                             Platform.exit();
                         }
                     }else{
-                        //El format del fixer no és correcte
-                        raiseAlert(Alert.AlertType.ERROR, "Error",
+                        //The file format is not valid
+                        Utils.raiseAlert(Alert.AlertType.ERROR, "Error",
                                 "El format del fitxer no és correcte\n" +
-                                        "Linia "+nLinies+": "+linia);
+                                        "Linia "+nLine+": "+line);
                         Platform.exit();
                     }
                 }
 
-                //Buscar en el directori tots els fitxers que hi ha escrits a info.csv
-                int nArxiusTrobats=0;
-                ArrayList<String> fitxersNoTrobats = new ArrayList<>();
-                for (int i = 0; i < musicInfo.size(); i++) {
-                    File f = new File(quinaDir, "music/"+ musicInfo.get(i).getNom());
-                    if(f.exists()){
-                        nArxiusTrobats++;
-                        musicInfo.get(i).setFile(f);
-                    }
-                    else {
-                        //Si no es troba el fitxer s'afegeix a la llista de fitxers no trobats
-                        fitxersNoTrobats.add(musicInfo.get(i).getNom());
-                        musicInfo.remove(i);
-                        i--;
-                    }
-                }
-
-                //Si hi ha fitxers que no s'han trobat, informar a l'usuari.
-                if(!fitxersNoTrobats.isEmpty()){
+                //If there are files not found, notify the user
+                if(!filesNotFound.isEmpty()){
                     StringBuilder sortida= new StringBuilder("No s'han trobat els següents fitxers:");
-                    for(String s : fitxersNoTrobats){
+                    for(String s : filesNotFound){
                         sortida.append("\n").append(s);
                     }
-                    //Mostrar la informació
-                    raiseAlert(Alert.AlertType.WARNING, "Lost Media",sortida.toString());
+                    Utils.raiseAlert(Alert.AlertType.WARNING, "Lost Media",sortida.toString());
                 }
 
             }else{
-                //No s'ha trobat el fitxer info.csv, informa i tanca.
-                raiseAlert(Alert.AlertType.ERROR, "Error","No s'ha trobat el fitxer: "+musicInfoFile.getAbsolutePath());
+                //The info.csv file was not found. Notify the user.
+                Utils.raiseAlert(Alert.AlertType.ERROR, "Error","No s'ha trobat el fitxer: "+musicInfoFile.getAbsolutePath());
                 Platform.exit();
             }
         }catch (FileNotFoundException ignored){
         }
 
-        //Posar els elements visuals a valors inicials
-        etiNomCanco.setVisible(false);
-        songsVBox.getChildren().remove(scrollbarItem);
+        //Set the controllers to the default value
+        lbSongName.setVisible(false);
+        songListContainer.getChildren().remove(songListItem);
         pauseButton.setVisible(false);
         reiniciarButton.setVisible(false);
-        btPartidaNova.setDisable(true);
+        btNewGame.setDisable(true);
     }
 
-    //Crea un Alert amb les propietats especificades, el mostra i espera.
-    private Optional<ButtonType> raiseAlert(Alert.AlertType alertType, String title, String content){
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        return alert.showAndWait();
-    }
-
-    //Possar la canço de l'index
+    /**
+     * Sets and plays the music. Also displays the name, the author and the cover of the song if
+     * exists in the song file metadata. If metadata is not found, the name of the file will be shown.
+     * @param index The index of the song to be played in the song list.
+     */
     private void setMedia(int index){
-        //Parar el reproductor.
+        //Stop the player if exists
         if(mediaPlayer!=null) mediaPlayer.stop();
         musicIsPlaying=false;
-        //Declarar un media amb la nova canço.
-        media=new Media(musicInfo.get(index).getFile().toURI().toString());
-        //Declarar el MediaPlayr amb el nou media.
+        //Create a new media with the song file.
+        Media media = new Media(songs.get(index).getFile().toURI().toString());
+        //Set the media to the media payer
         mediaPlayer = new MediaPlayer(media);
-        //Esperar a que el Media Player s'hagi inicialitzat abans de fer el seek.
+        //Wait for the player to be ready before seeking and playing.
         mediaPlayer.statusProperty().addListener((observable, oldStatus, newStatus) -> {
             if (newStatus == MediaPlayer.Status.READY) {
-                mediaPlayer.seek(Duration.seconds(musicInfo.get(index).getInici())); //Moure el punter
-                //Reproduir canço.
+                mediaPlayer.seek(Duration.seconds(songs.get(index).getStart())); //Seek to the start time
+                //Play the music.
                 playFadeIn();
             }
         });
-        //Actualitzar l'índex de la canço que s'està reproduint.
+        //Update the playing variable.
         playing=index;
-        etiNomCanco.setVisible(true);
-        etiNomCanco.setText(musicInfo.get(index).getNom().substring(0,musicInfo.get(index).getNom().lastIndexOf(".")));
+
+        //Show the song data.
+        lbSongName.setVisible(true);
+        Image songCover = songs.get(index).getCover();
+        if(songCover!=null) ivSongCover.setImage(songCover);
+        else ivSongCover.setImage(Utils.getImageResource("disc.png"));
+        lbSongName.setText(songs.get(index).getTitle());
+        lbSongAuthor.setText(songs.get(index).getAuthor());
     }
 
-    //Genera una canço nova.
+    /**
+     * Generates a new song to be played.
+     * It is run by the newSong button.
+     */
     @FXML
-    void cancoNova(ActionEvent event) {
-        if(nCanconsTretes<musicInfo.size()){
+    void cancoNova() {
+        //There's still music to be played.
+        //This check is not really necessary because when all the songs have been played
+        //the button is disabled. This is just for redundancy in case something goes wrong
+        //and the user can still press the button.
+        if(nSongsPlayed < songs.size()){
             Random r = new Random();
-            int indx=r.nextInt(musicInfo.size());
-            while(musicInfo.get(indx).getHaSortit())indx=r.nextInt(musicInfo.size());
+            int indx=r.nextInt(songs.size());
+            while(songs.get(indx).isPlayed())indx=r.nextInt(songs.size());
+
+            //Play the song.
             setMedia(indx);
+
+            //Add the song to the played song list.
             addItemToList(indx);
-            musicInfo.get(indx).setHaSortit(true);
-            nCanconsTretes++;
+
+            songs.get(indx).setPlayed(true);
+            nSongsPlayed++;
             pauseButton.setVisible(true);
             reiniciarButton.setVisible(true);
-            if(nCanconsTretes==musicInfo.size())btTreureCanco.setDisable(true);
-            btPartidaNova.setDisable(false);
-            //Natejar el quadre de cerca del llistat de cançons.
-            songsTextField.setText("");
+            //If the maximum of songs is reached, the button is disabled.
+            if(nSongsPlayed == songs.size()) btNewSong.setDisable(true);
+            btNewGame.setDisable(false);
+            //Clear the search text field.
+            tfSearchSong.setText("");
             searchSong();
         }
     }
 
+    /**
+     * Pauses a song if is being played or plays it if it is paused.
+     * Run by the play/pause button.
+     */
     @FXML
-    void pausarCanco(MouseEvent event) { //Pausa la canço
+    void pausarCanco() {
         if(musicIsPlaying){
             musicIsPlaying=false;
             mediaPlayer.pause();
-            pauseButton.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/me/bossaa55/quinamusical/images/play.png"))));
+            pauseButton.setImage(Utils.getImageResource("play.png"));
         }else{
             if(mediaPlayer!=null){
                 playFadeIn();
@@ -230,59 +236,83 @@ public class ControllerPlayer {
         }
     }
 
+    /**
+     * Warns the user before resetting, if user agrees, resets all the values
+     * and controllers to the default values.
+     * Run by the new game button.
+     */
     @FXML
-    void partidaNova(ActionEvent event) { //Reinicia tots els valors per començar una partida nova.
-        Optional<ButtonType> result= raiseAlert(Alert.AlertType.CONFIRMATION, "Partida Nova",
+    void partidaNova() {
+        Optional<ButtonType> result= Utils.raiseAlert(Alert.AlertType.CONFIRMATION, "Partida Nova",
                 "Segur que vols començar una partida nova? " +
                         "Tots els valors es posen per defecte, no es pot desfer.");
         if(result.get() == ButtonType.OK) {
             mediaPlayer.stop();
             musicIsPlaying = false;
             mediaPlayer = null;
-            etiNomCanco.setVisible(false);
+            lbSongName.setVisible(false);
             pauseButton.setVisible(false);
             reiniciarButton.setVisible(false);
-            btTreureCanco.setDisable(false);
-            btPartidaNova.setDisable(true);
-            songsVBox.getChildren().removeAll(songList);
+            btNewSong.setDisable(false);
+            btNewGame.setDisable(true);
+            songListContainer.getChildren().removeAll(songList);
             songList.clear();
-            songsTextField.setText("");
-            nCanconsTretes=0;
-            for(Musica m : musicInfo) m.setHaSortit(false);
+            tfSearchSong.setText("");
+            nSongsPlayed =0;
+            for(Song m : songs) m.setPlayed(false);
         }
     }
 
+    /**
+     * Seeks the song to the start time.
+     * Run by the reload button.
+     */
     @FXML
-    void reiniciarCanco() { //Posa la canço des de la tornada
-        Duration d = Duration.seconds(musicInfo.get(playing).getInici());
+    void reiniciarCanco() {
+        Duration d = Duration.seconds(songs.get(playing).getStart());
         mediaPlayer.seek(d);
         playFadeIn();
     }
 
     List<Label> songList= new ArrayList<>();
 
+    /**
+     * Creates an item to put in the list.
+     * If metadata exists, it puts the song name, else it puts the file name as the song title.
+     * @param index The index of the song to be put in the list.
+     */
     private void addItemToList(int index){
-        String nom = musicInfo.get(index).getNom();
-        Label label = new Label((songList.size()+1)+". "+nom.substring(0,nom.lastIndexOf(".")));
-        label.getStyleClass().addAll(scrollbarItem.getStyleClass());
+        Label label = new Label((songList.size()+1)+". "+ songs.get(index).getTitle());
+        label.getStyleClass().addAll(songListItem.getStyleClass());
         final int i=index;
         label.setOnMouseClicked(event ->{
             setMedia(i);
         });
         songList.add(0,label);
-        songsVBox.getChildren().add(0,label);
+        songListContainer.getChildren().add(0,label);
     }
 
+    /**
+     * Gets the search text field text and applies the filter
+     * to the list deleting or creating elements.
+     */
     @FXML
     void searchSong() {
-        songsVBox.getChildren().removeAll(songList);
+        songListContainer.getChildren().removeAll(songList);
         for(Label l : songList){
-            if(stringContains(l.getText(),songsTextField.getText())){
-                songsVBox.getChildren().add(l);
+            if(stringContains(l.getText(), tfSearchSong.getText())){
+                songListContainer.getChildren().add(l);
             }
         }
     }
 
+    /**
+     * Compares two strings, looks if a sequence appears in a string.
+     * It ignores case and accents and stuff.
+     * @param string The string to look in to
+     * @param sequence The string to be found in the first string
+     * @return Returns true if the sequence is found, else false.
+     */
     private boolean stringContains(String string, String sequence){
         String normalized1 = normalize(string);
         String normalized2 = normalize(sequence);
@@ -292,16 +322,24 @@ public class ControllerPlayer {
         return false;
     }
 
-    //Normalitza un string treient accents dels caràcters
+    /**
+     * Normalizes a string removing accents and stuff.
+     * @param input String to be normalized
+     * @return Normalized string
+     */
     private static String normalize(String input) {
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase();
     }
 
+    /**
+     * Plays the song with a fade in effect.
+     * MusicPlayer can't be null (it is not checked)
+     */
     private void playFadeIn() {
         musicIsPlaying=true;
-        pauseButton.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/me/bossaa55/quinamusical/images/pause.png"))));
+        pauseButton.setImage(Utils.getImageResource("pause.png"));
         mediaPlayer.setVolume(0);
         mediaPlayer.play();
         Timeline fadeInTimeline = new Timeline();
@@ -318,6 +356,9 @@ public class ControllerPlayer {
         fadeInTimeline.play();
     }
 
+    /*
+    INFO LINKS
+     */
     @FXML
     void openInfo(MouseEvent event) {
         infoContainer.setVisible(true);

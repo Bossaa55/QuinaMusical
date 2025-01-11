@@ -3,6 +3,8 @@ module me.bossaa55.quinamusical {
     requires javafx.fxml;
     requires javafx.media;
     requires java.desktop;
+    requires jaudiotagger;
+    requires java.logging;
 
 
     opens me.bossaa55.quinamusical to javafx.fxml;

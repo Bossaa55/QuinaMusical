@@ -2,7 +2,9 @@ package me.bossaa55.quinamusical.objects;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class Utils {
@@ -33,5 +35,9 @@ public class Utils {
         }catch (NumberFormatException e){
             return -1;
         }
+    }
+
+    public static Image getImageResource(String fileName){
+        return new Image(Objects.requireNonNull(Utils.class.getResourceAsStream("/me/bossaa55/quinamusical/images/"+fileName)));
     }
 }

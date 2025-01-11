@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
@@ -11,10 +12,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="1000.0" prefWidth="2000.0" styleClass="main" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.bossaa55.quinamusical.ControllerPlayer">
+<AnchorPane fx:id="root" prefHeight="1000.0" prefWidth="2000.0" styleClass="main" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.bossaa55.quinamusical.ControllerPlayer">
    <VBox fx:id="mainContainer" alignment="CENTER" prefHeight="500.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
       <children>
          <HBox alignment="CENTER" spacing="25.0" VBox.vgrow="ALWAYS">
@@ -22,14 +24,14 @@
                <VBox alignment="TOP_CENTER" maxWidth="500.0" minWidth="500.0" spacing="20.0" styleClass="container">
                   <children>
                      <Label styleClass="title-secondary" text="LLISTAT" VBox.vgrow="ALWAYS" />
-                     <TextField fx:id="songsTextField" onKeyTyped="#searchSong" promptText="Buscar..." styleClass="text-field" />
-                     <ScrollPane fx:id="scrollPane" maxWidth="500.0" VBox.vgrow="ALWAYS">
+                     <TextField fx:id="tfSearchSong" onKeyTyped="#searchSong" promptText="Buscar..." styleClass="text-field" />
+                     <ScrollPane maxWidth="500.0" VBox.vgrow="ALWAYS">
                        <content>
                          <AnchorPane minHeight="0.0" minWidth="0.0">
                               <children>
-                                 <VBox fx:id="songsVBox" spacing="15.0">
+                                 <VBox fx:id="songListContainer" spacing="15.0">
                                     <children>
-                                       <Label fx:id="scrollbarItem" disable="true" text="Nom Canço" visible="false" VBox.vgrow="ALWAYS">
+                                       <Label fx:id="songListItem" disable="true" text="Nom Canço" visible="false" VBox.vgrow="ALWAYS">
                                           <styleClass>
                                              <String fx:value="title-secondary" />
                                              <String fx:value="scrollbar-item" />
@@ -61,7 +63,39 @@
                            </HBox>
                            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" VBox.vgrow="ALWAYS">
                               <children>
-                                 <Label fx:id="etiNomCanco" styleClass="title-secondary" text="Nom Canço" VBox.vgrow="ALWAYS" />
+                                 <HBox alignment="CENTER" VBox.vgrow="NEVER">
+                                    <children>
+                                       <HBox prefHeight="260.0" prefWidth="750.0" styleClass="sub-container">
+                                          <children>
+                                             <AnchorPane>
+                                                <children>
+                                                   <ImageView fx:id="ivSongCover" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="cover" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+                                                      <image>
+                                                         <Image url="@images/disc.png" />
+                                                      </image>
+                                                   </ImageView>
+                                                   <Pane styleClass="cover-pane" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                                </children>
+                                             </AnchorPane>
+                                             <VBox alignment="CENTER_LEFT" prefHeight="200.0" HBox.hgrow="ALWAYS">
+                                                <children>
+                                                   <Label fx:id="lbSongName" styleClass="song-title" text="Nom Canço" wrapText="true" VBox.vgrow="ALWAYS" />
+                                                   <Label fx:id="lbSongAuthor" styleClass="song-author" text="Autor" />
+                                                </children>
+                                                <HBox.margin>
+                                                   <Insets bottom="30.0" right="30.0" top="30.0" />
+                                                </HBox.margin>
+                                             </VBox>
+                                          </children>
+                                          <HBox.margin>
+                                             <Insets />
+                                          </HBox.margin>
+                                       </HBox>
+                                    </children>
+                                    <VBox.margin>
+                                       <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    </VBox.margin>
+                                 </HBox>
                                  <HBox alignment="CENTER" spacing="50.0">
                                     <ImageView fx:id="reiniciarButton" fitHeight="100.0" fitWidth="100.0" onMouseClicked="#reiniciarCanco" pickOnBounds="true" preserveRatio="true" styleClass="hover-effect">
                                        <Image url="@images/arrow-spin.png" />
@@ -72,12 +106,12 @@
                                  </HBox>
                                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                                     <children>
-                                       <Button fx:id="btTreureCanco" mnemonicParsing="false" onAction="#cancoNova" prefHeight="100.0" styleClass="button-primary" text="+ CANÇO" VBox.vgrow="ALWAYS">
+                                       <Button fx:id="btNewSong" mnemonicParsing="false" onAction="#cancoNova" prefHeight="100.0" styleClass="button-primary" text="+ CANÇO" VBox.vgrow="ALWAYS">
                                           <font>
                                              <Font size="15.0" />
                                           </font>
                                        </Button>
-                                       <Button fx:id="btPartidaNova" mnemonicParsing="false" onAction="#partidaNova" prefWidth="200.0" styleClass="button-secondary" text="PARTIDA NOVA">
+                                       <Button fx:id="btNewGame" mnemonicParsing="false" onAction="#partidaNova" prefWidth="200.0" styleClass="button-secondary" text="PARTIDA NOVA">
                                           <font>
                                              <Font size="15.0" />
                                           </font>
@@ -209,4 +243,8 @@
             </padding></VBox>
       </children>
    </HBox>
+   <stylesheets>
+      <URL value="@styles.css" />
+      <URL value="@player.css" />
+   </stylesheets>
 </AnchorPane>

@@ -140,7 +140,7 @@ public class ControllerQuinesManager implements Initializable {
                 // Carregar el controlador de la nova pantalla
                 ControllerPlayer quinaController = loader.getController();
                 // Passar la quina a obrir
-                quinaController.setQuina(quina);
+                quinaController.start(quina);
 
                 // Obrir la pantalla
                 Stage stage = new Stage();
@@ -226,7 +226,7 @@ public class ControllerQuinesManager implements Initializable {
                         //Show the songs to the user
                         songsContainer.getChildren().clear();
                         for(int i = 0; i < songs.size(); i++){ //Create an item for each song
-                            ManagerSongListItem managerSongListItem = new ManagerSongListItem(songListItemContainer, i+1, songs.get(i).getName(), Utils.formatarSegons(songs.get(i).getStart()));
+                            ManagerSongListItem managerSongListItem = new ManagerSongListItem(songListItemContainer, i+1, songs.get(i).getTitle(), Utils.formatarSegons(songs.get(i).getStart()));
                             songsContainer.getChildren().add(managerSongListItem.getRoot());
                         }
 

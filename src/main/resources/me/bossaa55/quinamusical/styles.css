@@ -43,6 +43,12 @@
     -fx-font-weight: bold ;
 }
 
+.text-regular{
+    -fx-font-family: "Open Sans";
+    -fx-text-fill: #fff;
+    -fx-font-size: 14;
+}
+
 .title-secondary{
     -fx-font-size: 20px;
     -fx-text-fill: #fff;
@@ -128,7 +134,7 @@
 
 .text-field:focused{
     -fx-border-color: -fx-primary-color;
-	-fx-effect: dropshadow(three-pass-box, #f1e32443 , 35, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, #0F7B8A43 , 35, 0, 0, 0);
 }
 
 .text-field:hover{
@@ -148,7 +154,7 @@
 
 .button-primary:hover{
     -fx-border-color: -fx-primary-color;
-	-fx-effect: dropshadow(three-pass-box, #f1e32466 , 35, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, #0F7B8A66 , 35, 0, 0, 0);
 }
 
 .button-secondary{
@@ -176,7 +182,7 @@
 }
 
 .hover-effect:hover{
-	-fx-effect: dropshadow(three-pass-box, #f1e32466 , 35, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, #0F7B8A66 , 35, 0, 0, 0);
 }
 
 .info-container{

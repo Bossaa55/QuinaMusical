@@ -1,0 +1,20 @@
+.cover-pane{
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-gris; 
+    -fx-background-radius: 50;
+    -fx-border-radius: 24;
+    -fx-border-width: 20;
+}
+
+.song-title{
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 26px;
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold ;
+}
+
+.song-author{
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 20px;
+    -fx-text-fill: #fff;
+}
