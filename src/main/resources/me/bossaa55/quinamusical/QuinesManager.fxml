@@ -29,7 +29,7 @@
                                  <children>
                                     <VBox fx:id="quinaListContainer" spacing="10.0">
                                        <children>
-                                          <VBox fx:id="quinaListItemContainer" alignment="CENTER_LEFT" prefHeight="40.0" styleClass="sub-container">
+                                          <VBox fx:id="quinaListItemContainer" alignment="CENTER_LEFT" prefHeight="40.0" styleClass="sub-container2">
                                              <children>
                                                 <Label styleClass="bt-text" text="Label" />
                                              </children>

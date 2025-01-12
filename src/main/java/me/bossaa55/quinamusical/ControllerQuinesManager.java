@@ -102,7 +102,7 @@ public class ControllerQuinesManager implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/me/bossaa55/quinamusical/images/icon.png"))));
             stage.setOnCloseRequest(e ->{
-                if(!ControllerQuinaNova.isCanvisGuardats()) {
+                if(!ControllerQuinaNova.isChangesSaved()) {
                     Optional<ButtonType> result = Utils.raiseAlert(Alert.AlertType.CONFIRMATION, "Tancar",
                             "Segur que vol tancar? Els canvis no es guardaran.");
                     if (result.get() == ButtonType.OK) {
@@ -114,10 +114,10 @@ public class ControllerQuinesManager implements Initializable {
             if(nQuina>=0){
                 stage.setTitle("Editar Quina");
                 // Passar la quina a obrir
-                quinaController.iniciar(quines.get(nQuina));
+                quinaController.start(quines.get(nQuina));
             }else{
                 stage.setTitle("Crear Quina");
-                quinaController.iniciar(null);
+                quinaController.start(null);
             }
 
             stage.showAndWait();

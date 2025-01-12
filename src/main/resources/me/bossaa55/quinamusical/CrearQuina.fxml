@@ -19,7 +19,7 @@
    <children>
       <VBox alignment="TOP_CENTER" layoutX="139.0" layoutY="127.0" prefHeight="200.0" prefWidth="100.0" styleClass="container" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
          <children>
-            <Label fx:id="lbTitle" styleClass="title-main" text="Quina Nova" />
+            <Label fx:id="quinaTitleLabel" styleClass="title-main" text="Quina Nova" />
             <ScrollPane fx:id="spSongList" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0">
@@ -29,7 +29,7 @@
                               <VBox alignment="TOP_CENTER" fillWidth="false">
                                  <children>
                                     <Label prefWidth="400.0" styleClass="text-scondary" text="Titol" VBox.vgrow="NEVER" />
-                                    <TextField fx:id="tfTitolQuina" prefWidth="400.0" promptText="ex. Quina Boomer" />
+                                    <TextField fx:id="tfQuinaTitle" prefWidth="400.0" promptText="ex. Quina Boomer" />
                                  </children>
                               </VBox>
                               <VBox prefWidth="100.0" styleClass="underline" VBox.vgrow="NEVER">
@@ -39,28 +39,28 @@
                               </VBox>
                               <VBox alignment="TOP_CENTER" prefWidth="100.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <VBox fx:id="ctLlistaCancons" alignment="TOP_CENTER" fillWidth="false" spacing="15.0" VBox.vgrow="ALWAYS">
+                                    <VBox fx:id="songListContainer" alignment="TOP_CENTER" fillWidth="false" spacing="15.0" VBox.vgrow="ALWAYS">
                                        <children>
-                                          <VBox maxWidth="500.0" prefWidth="500.0">
+                                          <VBox fx:id="songListItemContainer" maxWidth="500.0" prefWidth="500.0">
                                              <children>
-                                                <HBox fx:id="ctCanconsItem" alignment="CENTER_LEFT" prefHeight="50.0" spacing="10.0">
+                                                <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10.0">
                                                    <children>
-                                                      <Label fx:id="lbNCancoItem" prefWidth="40.0" styleClass="title-secondary" text="00" HBox.hgrow="NEVER" />
-                                                      <Button fx:id="btCancoItem" alignment="TOP_LEFT" mnemonicParsing="false" pickOnBounds="false" prefWidth="400.0" styleClass="bt-addd-song" text="+" HBox.hgrow="NEVER">
+                                                      <Label prefWidth="40.0" styleClass="title-secondary" text="00" HBox.hgrow="NEVER" />
+                                                      <Button alignment="TOP_LEFT" mnemonicParsing="false" pickOnBounds="false" prefWidth="400.0" styleClass="bt-addd-song" text="+" HBox.hgrow="NEVER">
                                                          <HBox.margin>
                                                             <Insets />
                                                          </HBox.margin>
                                                       </Button>
-                                                      <Button fx:id="btEliminarItem" maxWidth="0.0" mnemonicParsing="false" pickOnBounds="false" prefWidth="40.0" styleClass="bt-delete-song" text="X" HBox.hgrow="NEVER" />
+                                                      <Button maxWidth="0.0" mnemonicParsing="false" pickOnBounds="false" prefWidth="40.0" styleClass="bt-delete-song" text="X" HBox.hgrow="NEVER" />
                                                    </children>
                                                 </HBox>
-                                                <VBox fx:id="ctPlayer" VBox.vgrow="ALWAYS">
+                                                <VBox fx:id="playerContainer" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <HBox alignment="CENTER" minWidth="-Infinity" prefHeight="50.0" VBox.vgrow="ALWAYS">
                                                          <children>
-                                                            <Slider fx:id="sliderCanco" onMouseReleased="#sliderReproductorRelease" pickOnBounds="false" HBox.hgrow="ALWAYS" />
-                                                            <Label fx:id="lbTemps" styleClass="text-main" text="00:00" />
-                                                            <Button graphicTextGap="0.0" maxWidth="0.0" minWidth="-Infinity" mnemonicParsing="false" onAction="#guardarTemps" pickOnBounds="false" prefHeight="40.0" prefWidth="40.0" styleClass="bt-save-time" textOverrun="CLIP">
+                                                            <Slider fx:id="playerSlider" onMouseReleased="#sliderPlayerRelease" pickOnBounds="false" HBox.hgrow="ALWAYS" />
+                                                            <Label fx:id="lbTime" styleClass="text-main" text="00:00" />
+                                                            <Button graphicTextGap="0.0" maxWidth="0.0" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveStartTime" pickOnBounds="false" prefHeight="40.0" prefWidth="40.0" styleClass="bt-save-time" textOverrun="CLIP">
                                                                <HBox.margin>
                                                                   <Insets left="10.0" />
                                                                </HBox.margin>
@@ -90,7 +90,7 @@
                                                                   <Image url="@images/play.png" />
                                                                </image>
                                                             </ImageView>
-                                                            <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#reiniciarPlayer" pickOnBounds="true" preserveRatio="true">
+                                                            <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#resetPlayer" pickOnBounds="true" preserveRatio="true">
                                                                <image>
                                                                   <Image url="@images/arrow-spin.png" />
                                                                </image>
@@ -119,12 +119,12 @@
             </ScrollPane>
             <HBox alignment="CENTER_RIGHT" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#tancar" styleClass="bt-sec" text="Cancelar">
+                  <Button mnemonicParsing="false" onAction="#close" styleClass="bt-sec" text="Cancelar">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#guardarQuina" styleClass="bt-main" text="Guardar">
+                  <Button mnemonicParsing="false" onAction="#saveQuina" styleClass="bt-main" text="Guardar">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin>
@@ -139,7 +139,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
       </VBox>
-      <HBox fx:id="ctLoading" alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" styleClass="info-container" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox fx:id="loadingContainer" alignment="CENTER" fillHeight="false" prefHeight="100.0" prefWidth="200.0" styleClass="info-container" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="400.0" styleClass="container">
                <children>

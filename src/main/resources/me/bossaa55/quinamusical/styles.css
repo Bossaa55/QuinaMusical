@@ -36,6 +36,11 @@
     -fx-background-radius: 6px;
 }
 
+.sub-container2:hover{
+    -fx-background-color: -fx-gris;
+    -fx-background-radius: 6px;
+}
+
 .title-main{
     -fx-font-family: "Open Sans";
     -fx-font-size: 36px;
@@ -118,6 +123,9 @@
     -fx-background-radius: 5em;
 }
 
+.scroll-pane .corner {    
+    -fx-background-color: transparent ;
+}
 
 .increment-button, .decrement-button {
     -fx-background-color: transparent;

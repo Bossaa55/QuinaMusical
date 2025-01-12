@@ -10,7 +10,7 @@
 
 .bt-addd-song:hover{
     -fx-border-color: -fx-primary-color;
-	-fx-effect: dropshadow(three-pass-box, #f1e32443 , 35, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, #0F7B8A43 , 35, 0, 0, 0);
 }
 
 .bt-new-song{
@@ -50,7 +50,7 @@
 }
 
 .bt-save-time:hover{
-	-fx-effect: dropshadow(three-pass-box, #f1e42455 , 35, 0, 0, 0);
+	-fx-effect: dropshadow(three-pass-box, #0F7B8A55 , 35, 0, 0, 0);
 
 }
 
